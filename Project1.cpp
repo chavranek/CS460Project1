@@ -17,6 +17,9 @@ int main (int argc, char * argv[])
 
 
     lex.GetToken();
+
+
+    cout << NUM_TOKENS << endl;
  
 
 	return 0;

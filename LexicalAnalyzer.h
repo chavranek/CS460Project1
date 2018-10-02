@@ -6,7 +6,12 @@
 
 using namespace std;
 
-enum token_type {NONE = -1, EOF_T, NUM_TOKENS};
+// >=100 is a backup state
+// <100 is not a backup state
+enum token_type {NONE = -1, EOF_T, 
+        LISTOP_T =100,PREDICATE_T,KEYWORD_T,IDENT_T,PLUS_T,MIN_T,ERROR_T,NUMLIT_T,GT_T,LT_T,
+        STRLIT_T = 1,DIV_T,MULT_T,MODULO_T,ROUND_T,EQUALTO_T,GTE_T,LTE_T,LPAREN_T,RPAREN_T,SQUOTE_T,PREDICATE,
+        NUM_TOKENS};
 
 class LexicalAnalyzer 
 {
