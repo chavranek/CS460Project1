@@ -8,7 +8,7 @@ SetLimits.o : SetLimits.cpp SetLimits.h
 	g++ -g -c SetLimits.cpp
 
 LexicalAnalyzer.o : LexicalAnalyzer.cpp LexicalAnalyzer.h
-	g++ -g -c LexicalAnalyzer.cpp
+	g++ -g -c -std=c++11 LexicalAnalyzer.cpp
 
 SyntacticalAnalyzer.o : SyntacticalAnalyzer.cpp SyntacticalAnalyzer.h LexicalAnalyzer.h
 	g++ -g -c SyntacticalAnalyzer.cpp

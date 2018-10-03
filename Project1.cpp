@@ -17,10 +17,11 @@ int main (int argc, char * argv[])
 
 
     lex.GetToken();
-
-
-    cout << NUM_TOKENS << endl;
- 
+    lex.GetToken();
+    lex.GetToken();
+    lex.GetToken();
+    lex.GetToken();
+    lex.GetToken();
 
 	return 0;
 }

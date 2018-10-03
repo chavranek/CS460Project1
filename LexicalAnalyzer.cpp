@@ -24,13 +24,86 @@ int DFA[][21] = {
 
 static string token_names[] = {	"EOF_T" }; 
 
+
+
+int getcol( char c){
+
+    if (c == '+'){
+        return 0;
+    }
+    else if (c == '-'){
+        return 1;
+    }
+    else if (isdigit(c)){
+        return 2;
+    }
+    else if (c == 'c'){
+        return 3;
+    }
+    else if (c == 'a'){
+        return 4;
+    }
+    else if (c == 'd'){
+        return 5;
+    }
+    else if (c == 'r'){
+        return 6;
+    }
+    else if (c == '_'){
+        return 7;
+    }
+    else if (c == '?'){
+        return 8;
+    }
+    else if (c == '='){
+        return 9;
+    }
+    else if (c == '>'){
+        return 10;
+    }
+    else if (c == '<'){
+        return 11;
+    }
+    else if (c == '/'){
+        return 12;
+    }
+    else if (c == '*'){
+        return 13;
+    }
+    else if (c == '('){
+        return 14;
+    }
+    else if (c == ')'){
+        return 15;
+    }
+    else if (c == '\''){
+        return 16;
+    }
+    else if (c == '.'){
+        return 17;
+    }
+    else if (c == ' '){
+        return 18;
+    }
+    else if (isalpha(c)){
+        return 19;
+    }
+    else if (c == '"'){
+        return 20;
+    }
+
+    return 0;
+
+
+}
+
 LexicalAnalyzer::LexicalAnalyzer (char * filename)
 {
 	// This function will initialize the lexical analyzer class
     
 
     input = ifstream(filename);
-    line = "";
+    getline(input,line);
     linenum = 1;
     pos = 0;
     lexeme ="";
@@ -47,27 +120,43 @@ token_type LexicalAnalyzer::GetToken ()
 {
 
 
+
     // need to start reading the next line of input?
-    if(pos == line.length() -1){
+    if(pos == line.length()){
         pos = 0;
         getline(input,line);
+        //cout <<  "NEXT LINE: " << line << endl;
         linenum++;
     }
 
-	// reading character by character from line
-	
+
+
+    // read a lexeme?
+    int state = 0;
 	string tmp_lexeme;
 	while(pos < line.length()){
-
-		tmp_lexeme += line[pos];
+        char c = line[pos];
+        state =  DFA[state][getcol(c)];
+        // only add whitespace if state == 9 (dbl quote)
+        if (state ==9 || c!= ' ')
+		    tmp_lexeme += c;
+        pos++;
+        // we hit a non-backup accepting state
+        if (state >= 200){
+            break;
+        }
+        // we hit a backup accepting state
+        else if (state >=100){
+            pos--;
+            break;
+        }
 	}
 
-
 	// done reading lexeme
+    cout  << tmp_lexeme <<endl;
 	lexeme = tmp_lexeme;
 	
 
-    cout << line << endl;
 	// This function will find the next lexeme int the input file and return
 	// the token_type value associated with that lexeme
 	return token;
