@@ -25,6 +25,12 @@ int DFA[][21] = {
 static string token_names[] = {	"EOF_T" }; 
 
 
+inline std::string trim(std::string& str)
+{
+    str.erase(0, str.find_first_not_of(' '));       //prefixing spaces
+    str.erase(str.find_last_not_of(' ')+1);         //surfixing spaces
+    return str;
+}
 
 int getcol( char c){
 
@@ -104,6 +110,7 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
 
     input = ifstream(filename);
     getline(input,line);
+	line = trim(line);
     linenum = 1;
     pos = 0;
     lexeme ="";
@@ -116,20 +123,16 @@ LexicalAnalyzer::~LexicalAnalyzer ()
 	// This function will complete the execution of the lexical analyzer class
 }
 
+
 token_type LexicalAnalyzer::GetToken ()
 {
-
-
-
     // need to start reading the next line of input?
     if(pos == line.length()){
         pos = 0;
         getline(input,line);
-        //cout <<  "NEXT LINE: " << line << endl;
+		line = trim(line);
         linenum++;
     }
-
-
 
     // read a lexeme?
     int state = 0;
@@ -152,6 +155,12 @@ token_type LexicalAnalyzer::GetToken ()
         }
 	}
 
+
+	// no more?
+	if (tmp_lexeme == ""){
+		return EOF_T;
+	}
+
 	// done reading lexeme
     cout  << tmp_lexeme <<endl;
 	lexeme = tmp_lexeme;
@@ -159,7 +168,7 @@ token_type LexicalAnalyzer::GetToken ()
 
 	// This function will find the next lexeme int the input file and return
 	// the token_type value associated with that lexeme
-	return token;
+	return DIV_T;
 }
 
 string LexicalAnalyzer::GetTokenName (token_type t) const

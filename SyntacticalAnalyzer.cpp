@@ -12,7 +12,9 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 	token_type t;
 	while ((t = lex->GetToken()) != EOF_T)
 	{
-		// get a token
+
+        int i;
+
 		// write its name to the .p1 file
 		// write the corresponding lexeme to the .p1 file
 	}

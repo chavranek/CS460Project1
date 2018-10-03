@@ -12,16 +12,7 @@ int main (int argc, char * argv[])
 		exit (1);
 	}
 	SetLimits ();
-	//SyntacticalAnalyzer parser (argv[1]);
-    LexicalAnalyzer lex(argv[1]);
-
-
-    lex.GetToken();
-    lex.GetToken();
-    lex.GetToken();
-    lex.GetToken();
-    lex.GetToken();
-    lex.GetToken();
+	SyntacticalAnalyzer parser (argv[1]);
 
 	return 0;
 }
