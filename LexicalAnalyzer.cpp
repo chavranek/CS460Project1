@@ -181,51 +181,60 @@ token_type LexicalAnalyzer::GetToken ()
     // read a lexeme?
     int state = 0;
     string tmp_lexeme;
+    token = NONE;
 	while(pos < line.length()){
-	  char c = line[pos];
-	int col = getcol(c);
-	if (col == 21)
-	  {
-	    //Report Error
-	    if(errorMsg != "")
-	      {
-		errorMsg += "\n";	
-	      }
-	    errorMsg += "Error at " + to_string(pos) + "," + to_string(linenum) + ": Invalid character found: " + c;
-	    pos++;
-	    errors++;
-	    token = ERROR_T;
-	    return token;
-	  }
-	state =  DFA[state][getcol(c)];
-	if (state == ERROR_T)
-	  {
-	    if(errorMsg != "")
-	      {
+	    char c = line[pos];
+	    int col = getcol(c);
+	    if (col == 21)
+	    {
+	        //Report Error
+	        if(errorMsg != "")
+	        {
+		        errorMsg += "\n";	
+	        }
+	        errorMsg += "Error at " + to_string(pos) + "," + to_string(linenum) + ": Invalid character found: " + c;
+	        pos++;
+	        errors++;
+	        token = ERROR_T;
+	        return token;
+	    }
+
+	    state =  DFA[state][getcol(c)];
+	    if (state == ERROR_T)
+	    {
+	        if(errorMsg != "")
+	        {
                 errorMsg += "\n";
-              }
+            }
             errorMsg += "Error at " + to_string(pos) + "," + to_string(linenum) + ": Invalid character found: " + c;	    
-	    pos++;
-	    errors++;
-	    token = ERROR_T;
-	    return token;
-	  }
+	        //pos++;
+	        errors++;
+	        //token = ERROR_T;
+	        //return token;
+	    }
 	// only add whitespace if state == 9 (dbl quote)
         if (state ==10 || c!= ' ')
-	  tmp_lexeme += c;
+	        tmp_lexeme += c;
+
         pos++;
         // we hit a non-backup accepting state
         if (state >= 200){
-	  token = (token_type)state;
-	  break;
+	        token = (token_type)state;
+	        break;
         }
         // we hit a backup accepting state
         else if (state >=100){
-	  token = (token_type)state;
+	        token = (token_type)state;
             pos--;
             break;
         }
 	}
+
+
+    // this fixes if the lexeme is the only/last character on line
+    if (token == NONE){
+        token = (token_type)DFA[state][14];
+    }
 
 
 	// no more?
@@ -235,7 +244,7 @@ token_type LexicalAnalyzer::GetToken ()
 		}*/
 
 	// done reading lexeme
-	//cout  << tmp_lexeme <<  "    " << this->GetTokenName(token) << endl;
+	cout  << tmp_lexeme <<  "    " << this->GetTokenName(token) << endl;
 	lexeme = tmp_lexeme;
 	
 
