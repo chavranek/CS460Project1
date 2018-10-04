@@ -95,7 +95,7 @@ token_type LexicalAnalyzer::GetToken ()
 	        pos++;
 	        errors++;
 	        token = ERROR_T;
-		tokenFile << this->GetTokenName(token) << setw(15) << c << endl;
+		tokenFile << left << setw(12) << this->GetTokenName(token)  << c << endl;
 	        return token;
 	    }
 
@@ -158,7 +158,7 @@ token_type LexicalAnalyzer::GetToken ()
     }
 
     if(!tmp_lexeme.empty())
-        tokenFile << this->GetTokenName(token) << setw(15) << tmp_lexeme << endl;
+      tokenFile << left << setw(12) <<  this->GetTokenName(token) << tmp_lexeme << endl;
 
 	lexeme = tmp_lexeme;
 
