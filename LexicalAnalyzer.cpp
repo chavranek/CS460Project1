@@ -207,7 +207,6 @@ string LexicalAnalyzer::trimExtension(string s) {
 
 void LexicalAnalyzer::initTokenToName() {
     token_names[LISTOP_T] = "LISTOP_T";
-    token_names[PREDICATE_T] = "PREDICATE_T";
     token_names[KEYWORD_T] = "KEYWORD_T";
     token_names[IDENT_T] = "IDENT_T";
     token_names[PLUS_T] = "PLUS_T";
