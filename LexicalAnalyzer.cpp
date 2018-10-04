@@ -106,6 +106,8 @@ int getcol( char c){
 
 // not sure where to put this...
 map<token_type,string> token_names;
+map<string,token_type> keywords;
+map<string,token_type> predicates;
 LexicalAnalyzer::LexicalAnalyzer (char * filename)
 {
 	// This function will initialize the lexical analyzer class
@@ -145,7 +147,43 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
     token_names[SQUOTE_T] = "SQUOTE_T";
     token_names[PREDICATE] = "PREDICATE";
     token_names[ERROR_T] = "ERROR_T";
-    token_names[EOF_T] = "EOF_T";
+    token_names[CONS_T] = "CONS_T";
+    token_names[IF_T] = "IF_T";
+    token_names[COND_T] = "COND_T";
+    token_names[ELSE_T] = "ELSE_T";
+    token_names[DISPLAY_T] = "DISPLAY_T";
+    token_names[NEWLINE_T] = "NEWLINE_T";
+    token_names[AND_T] = "AND_T";
+    token_names[OR_T] = "OR_T";
+    token_names[NOT_T] = "NOT_T";
+    token_names[DEFINE_T] = "DEFINE_T";
+    token_names[NUMBERP_T] = "NUMBERP_T";
+    token_names[LISTP_T] = "LISTP_T";
+    token_names[ZEROP_T] = "ZEROP_T";
+    token_names[NULLP_T] = "NULLP_T";
+    token_names[STRINGP_T] = "STRINGP_T";
+
+    
+
+    keywords["cons"] = CONS_T;
+    keywords["if"] = IF_T;
+    keywords["cond"] = COND_T;
+    keywords["else"] = ELSE_T;
+    keywords["display"] = DISPLAY_T;
+    keywords["newline"] = NEWLINE_T;
+    keywords["and"] = AND_T;
+    keywords["or"] = OR_T;
+    keywords["not"] = NOT_T;
+    keywords["define"] = DEFINE_T;
+
+    predicates["number?"] = NUMBERP_T;
+    predicates["list?"] = LISTP_T;
+    predicates["zero?"] = ZEROP_T;
+    predicates["null?"] = NULLP_T;
+    predicates["string?"] = STRINGP_T;
+
+
+
 
 }
 
@@ -236,6 +274,26 @@ token_type LexicalAnalyzer::GetToken ()
         token = (token_type)DFA[state][14];
     }
 
+    // check if its actually a keyword or just an IDENT_T
+    if(token == KEYWORD_T){
+        // we found it in the keywords hash table
+        if(keywords.find(tmp_lexeme) != keywords.end()){
+            token = keywords[tmp_lexeme];
+        }
+        else // we didnt find it
+            token = IDENT_T;
+    }
+    // check if its actually a predicate or an IDEN_T + ?
+    else if (token == PREDICATE){
+        if(predicates.find(tmp_lexeme) != predicates.end()){
+            token = predicates[tmp_lexeme];
+        }
+        else{
+            pos--; // backup on the ?
+            tmp_lexeme.pop_back();
+            token = IDENT_T;
+        }
+    }
 
 	// no more?
 	// if statement causes us to stop even at blank lines in middle of file
