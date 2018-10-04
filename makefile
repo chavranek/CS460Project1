@@ -31,5 +31,5 @@ submit : Project1.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.
 	cp SyntacticalAnalyzer.cpp TeamhP1
 	cp makefile TeamhP1
 	cp README.txt TeamhP1
-	tar cfvz yourlastnameP1.tgz TeamhP1
+	tar cfvz TeamhP1.tgz TeamhP1
 	cp TeamhP1.tgz ~tiawatts/cs460drop
