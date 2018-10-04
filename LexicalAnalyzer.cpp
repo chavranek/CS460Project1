@@ -43,6 +43,8 @@ LexicalAnalyzer::~LexicalAnalyzer ()
 }
 
 
+// This function will find the next lexeme int the input file and return
+// the token_type value associated with that lexeme
 token_type LexicalAnalyzer::GetToken ()
 {
     // need to start reading the next line of input?
@@ -66,6 +68,8 @@ token_type LexicalAnalyzer::GetToken ()
             listingFile << " error";
         }
         listingFile << " found in input file\n";
+        token = EOF_T;
+        tokenFile << this->GetTokenName(token) << endl;
 	    return EOF_T;
 	  }
        	line = trim(line);
@@ -152,21 +156,13 @@ token_type LexicalAnalyzer::GetToken ()
         }
     }
 
-	// no more?
-	// if statement causes us to stop even at blank lines in middle of file
-	/*if (tmp_lexeme == ""){
-		return EOF_T;
-		}*/
+    if(!tmp_lexeme.empty())
+        tokenFile << this->GetTokenName(token) << setw(15) << tmp_lexeme << endl;
 
-	// done reading lexeme
-	//cout  << tmp_lexeme <<  "    " << this->GetTokenName(token) << endl;
 	lexeme = tmp_lexeme;
 
 
-	// This function will find the next lexeme int the input file and return
-	// the token_type value associated with that lexeme
 	return token;
-	//return DIV_T;
 }
 
 string LexicalAnalyzer::GetTokenName (token_type t)
@@ -240,6 +236,7 @@ void LexicalAnalyzer::initTokenToName() {
     token_names[ZEROP_T] = "ZEROP_T";
     token_names[NULLP_T] = "NULLP_T";
     token_names[STRINGP_T] = "STRINGP_T";
+    token_names[EOF_T] = "EOF_T";
 }
 
 void LexicalAnalyzer::initKeywordToName() {
