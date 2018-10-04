@@ -55,14 +55,15 @@ class LexicalAnalyzer
 	int pos;
 	string lexeme;
 	int errors;
-    map<token_type,string> token_names;
-    map<string,token_type> keywords;
-    map<string,token_type> predicates;
-    void initTokenToName();
-    void initKeywordToName();
-    void initPredicateToName();
-    string trimExtension(string s);
-    int getcol(char c);
+  string errorMsg = "";
+  map<token_type,string> token_names;
+  map<string,token_type> keywords;
+  map<string,token_type> predicates;
+  void initTokenToName();
+  void initKeywordToName();
+  void initPredicateToName();
+  string trimExtension(string s);
+  int getcol(char c);
 };
 
 #endif

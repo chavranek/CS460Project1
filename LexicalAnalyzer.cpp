@@ -4,8 +4,6 @@
 
 using namespace std;
 
-string errorMsg = "";
-
 inline std::string trim(std::string& str)
 {
     str.erase(0, str.find_first_not_of(' '));       //prefixing spaces
@@ -40,6 +38,10 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
 LexicalAnalyzer::~LexicalAnalyzer ()
 {
 	// This function will complete the execution of the lexical analyzer class
+  listingFile.close();
+  tokenFile.close();
+  debugFile.close();
+  input.close();
 }
 
 
