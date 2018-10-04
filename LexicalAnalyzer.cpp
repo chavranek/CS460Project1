@@ -95,6 +95,7 @@ token_type LexicalAnalyzer::GetToken ()
 	        pos++;
 	        errors++;
 	        token = ERROR_T;
+		tokenFile << this->GetTokenName(token) << setw(15) << c << endl;
 	        return token;
 	    }
 
