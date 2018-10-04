@@ -97,8 +97,8 @@ int getcol( char c){
     else if (c == '"'){
         return 20;
     }
-
-    return 0;
+    
+    return 21;
 
 
 }
@@ -115,6 +115,7 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
     pos = 0;
     lexeme ="";
     errors = 0;
+    token = NONE;
 
 }
 
@@ -128,26 +129,39 @@ token_type LexicalAnalyzer::GetToken ()
 {
     // need to start reading the next line of input?
     if(pos == line.length()){
-        pos = 0;
+      // write the entire line to the .lst file
+      cout << linenum << ": " << line << endl;
+      pos = 0;
 	// if a line can't be grabbed then the end of the file has been reached
 	if(!getline(input,line))
 	  {
 	    return EOF_T;
 	  }
-        getline(input,line);
-		line = trim(line);
+       	line = trim(line);
         linenum++;
     }
-
+    //cout << "pos: " << pos << endl;
+    
     // read a lexeme?
     int state = 0;
-	string tmp_lexeme;
+    string tmp_lexeme;
 	while(pos < line.length()){
         char c = line[pos];
-        state =  DFA[state][getcol(c)];
+	int col = getcol(c);
+	if (col == 21)
+	  {
+	    //Report Error
+	    pos++;
+	    token = ERROR_T;
+	    return token;
+	  }
+	else
+	  {
+	    state =  DFA[state][getcol(c)];
+	  }
         // only add whitespace if state == 9 (dbl quote)
         if (state ==9 || c!= ' ')
-		    tmp_lexeme += c;
+	  tmp_lexeme += c;
         pos++;
         // we hit a non-backup accepting state
         if (state >= 200){
@@ -168,13 +182,13 @@ token_type LexicalAnalyzer::GetToken ()
 		}*/
 
 	// done reading lexeme
-    cout  << tmp_lexeme <<endl;
+	//cout  << tmp_lexeme <<endl;
 	lexeme = tmp_lexeme;
 	
 
 	// This function will find the next lexeme int the input file and return
 	// the token_type value associated with that lexeme
-	return DIV_T;
+	return token;
 }
 
 string LexicalAnalyzer::GetTokenName (token_type t) const
