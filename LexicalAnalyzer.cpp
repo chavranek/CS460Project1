@@ -250,6 +250,8 @@ void LexicalAnalyzer::initKeywordToName() {
     keywords["or"] = OR_T;
     keywords["not"] = NOT_T;
     keywords["define"] = DEFINE_T;
+    keywords["modulo"] = MODULO_T;
+    keywords["round"] = ROUND_T;
 }
 
 void LexicalAnalyzer::initPredicateToName() {
