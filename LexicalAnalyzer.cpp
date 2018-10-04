@@ -23,7 +23,7 @@ int DFA[][21] = {
 };
 
 static string token_names[] = {	"EOF_T" }; 
-
+string errorMsg = "";
 
 inline std::string trim(std::string& str)
 {
@@ -130,9 +130,14 @@ token_type LexicalAnalyzer::GetToken ()
     // need to start reading the next line of input?
     if(pos == line.length()){
       // write the entire line to the .lst file
-      cout << linenum << ": " << line << endl;
+      cout << "   " << linenum << ": " << line << endl;
+      if (errorMsg != "")
+	{
+	  cout << errorMsg << endl;
+	}
       pos = 0;
-	// if a line can't be grabbed then the end of the file has been reached
+      errorMsg = "";
+      // if a line can't be grabbed then the end of the file has been reached
 	if(!getline(input,line))
 	  {
 	    return EOF_T;
@@ -151,16 +156,31 @@ token_type LexicalAnalyzer::GetToken ()
 	if (col == 21)
 	  {
 	    //Report Error
+	    if(errorMsg != "")
+	      {
+		errorMsg += "\n";	
+	      }
+	    errorMsg += "Error at " + to_string(pos) + "," + to_string(linenum) + ": Invalid character found: " + c;
 	    pos++;
+	    errors++;
 	    token = ERROR_T;
 	    return token;
 	  }
-	else
+	state =  DFA[state][getcol(c)];
+	if (state == ERROR_T)
 	  {
-	    state =  DFA[state][getcol(c)];
+	    if(errorMsg != "")
+	      {
+                errorMsg += "\n";
+              }
+            errorMsg += "Error at " + to_string(pos) + "," + to_string(linenum) + ": Invalid character found: " + c;	    
+	    pos++;
+	    errors++;
+	    token = ERROR_T;
+	    return token;
 	  }
-        // only add whitespace if state == 9 (dbl quote)
-        if (state ==9 || c!= ' ')
+	// only add whitespace if state == 9 (dbl quote)
+        if (state ==10 || c!= ' ')
 	  tmp_lexeme += c;
         pos++;
         // we hit a non-backup accepting state
