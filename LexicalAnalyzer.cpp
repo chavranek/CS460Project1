@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <cstdlib>
+#include <map>
 #include "LexicalAnalyzer.h"
 
 using namespace std;
@@ -103,6 +104,8 @@ int getcol( char c){
 
 }
 
+// not sure where to put this...
+map<token_type,string> token_names;
 LexicalAnalyzer::LexicalAnalyzer (char * filename)
 {
 	// This function will initialize the lexical analyzer class
@@ -116,6 +119,33 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
     lexeme ="";
     errors = 0;
     token = NONE;
+
+
+
+    // insert into HASH table
+    token_names[LISTOP_T] = "LISTOP_T";
+    token_names[PREDICATE_T] = "PREDICATE_T";
+    token_names[KEYWORD_T] = "KEYWORD_T";
+    token_names[IDENT_T] = "IDENT_T";
+    token_names[PLUS_T] = "PLUS_T";
+    token_names[MIN_T] = "MIN_T";
+    token_names[NUMLIT_T] = "NUMLIT_T";
+    token_names[GT_T] = "GT_T";
+    token_names[LT_T] = "LT_T";
+    token_names[STRLIT_T] = "STRLIT_T";
+    token_names[DIV_T] = "DIV_T";
+    token_names[MULT_T] = "MULT_T";
+    token_names[MODULO_T] = "MODULO_T";
+    token_names[ROUND_T] = "ROUND_T";
+    token_names[EQUALTO_T] = "EQUALTO_T";
+    token_names[GTE_T] = "GTE_T";
+    token_names[LTE_T] = "LTE_T";
+    token_names[LPAREN_T] = "LPAREN_T";
+    token_names[RPAREN_T] = "RPAREN_T";
+    token_names[SQUOTE_T] = "SQUOTE_T";
+    token_names[PREDICATE] = "PREDICATE";
+    token_names[ERROR_T] = "ERROR_T";
+    token_names[EOF_T] = "EOF_T";
 
 }
 
@@ -135,6 +165,7 @@ token_type LexicalAnalyzer::GetToken ()
 	{
 	  cout << errorMsg << endl;
 	}
+      //cout << linenum << ": " << line << endl;
       pos = 0;
       errorMsg = "";
       // if a line can't be grabbed then the end of the file has been reached
@@ -152,6 +183,7 @@ token_type LexicalAnalyzer::GetToken ()
     string tmp_lexeme;
 	while(pos < line.length()){
         char c = line[pos];
+<<<<<<< HEAD
 	int col = getcol(c);
 	if (col == 21)
 	  {
@@ -185,10 +217,12 @@ token_type LexicalAnalyzer::GetToken ()
         pos++;
         // we hit a non-backup accepting state
         if (state >= 200){
+            token = (token_type)state;
             break;
         }
         // we hit a backup accepting state
         else if (state >=100){
+            token = (token_type)state;
             pos--;
             break;
         }
@@ -202,7 +236,7 @@ token_type LexicalAnalyzer::GetToken ()
 		}*/
 
 	// done reading lexeme
-	//cout  << tmp_lexeme <<endl;
+	cout  << tmp_lexeme <<  "    " << this->GetTokenName(token) << endl;
 	lexeme = tmp_lexeme;
 	
 
@@ -215,7 +249,7 @@ string LexicalAnalyzer::GetTokenName (token_type t) const
 {
 	// The GetTokenName function returns a string containing the name of the
 	// token passed to it. 
-	return "";
+    return token_names[t];
 }
 
 string LexicalAnalyzer::GetLexeme () const
