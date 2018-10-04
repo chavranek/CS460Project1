@@ -13,8 +13,13 @@ LexicalAnalyzer.o : LexicalAnalyzer.cpp LexicalAnalyzer.h
 SyntacticalAnalyzer.o : SyntacticalAnalyzer.cpp SyntacticalAnalyzer.h LexicalAnalyzer.h
 	g++ -g -c SyntacticalAnalyzer.cpp
 
-clean : 
-	rm *.o P1.out *.gch
+
+.PHONY: clean
+clean:
+	@rm -f *.o P1.out *.gch
+
+run: P1.out
+	./P1.out P1-0.ss
 
 submit : Project1.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
 	rm -rf yourlastnameP1
