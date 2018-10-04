@@ -19,8 +19,6 @@ map<string,token_type> predicates;
 LexicalAnalyzer::LexicalAnalyzer (char * filename)
 {
 	// This function will initialize the lexical analyzer class
-
-
     input = ifstream(filename);
     getline(input,line);
 	line = trim(line);
@@ -56,6 +54,13 @@ token_type LexicalAnalyzer::GetToken ()
       // if a line can't be grabbed then the end of the file has been reached
 	if(!getline(input,line))
 	  {
+        cout << errors;
+        if(errors > 1) {
+            cout << " errors";
+        } else {
+            cout << " error";
+        }
+        cout << " found in input file\n";
 	    return EOF_T;
 	  }
        	line = trim(line);
