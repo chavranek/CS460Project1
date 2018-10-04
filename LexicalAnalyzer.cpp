@@ -47,6 +47,8 @@ LexicalAnalyzer::~LexicalAnalyzer ()
 // the token_type value associated with that lexeme
 token_type LexicalAnalyzer::GetToken ()
 {
+
+
     // need to start reading the next line of input?
     if(pos == line.length()){
       // write the entire line to the .lst file
@@ -84,6 +86,9 @@ token_type LexicalAnalyzer::GetToken ()
 	while(pos < line.length()){
 	    char c = line[pos];
 	    int col = getcol(c);
+	    // only add whitespace if state == 9 (dbl quote)
+        if (state ==10 || c!= ' ')
+	        tmp_lexeme += c;
 	    if (col == 21)
 	    {
 	        //Report Error
@@ -95,7 +100,8 @@ token_type LexicalAnalyzer::GetToken ()
 	        pos++;
 	        errors++;
 	        token = ERROR_T;
-		tokenFile << left << setw(12) << this->GetTokenName(token)  << c << endl;
+	    	tokenFile << left << setw(12) << this->GetTokenName(token)  << c << endl;
+            lexeme = tmp_lexeme;
 	        return token;
 	    }
 
@@ -112,9 +118,6 @@ token_type LexicalAnalyzer::GetToken ()
 	        //token = ERROR_T;
 	        //return token;
 	    }
-	// only add whitespace if state == 9 (dbl quote)
-        if (state ==10 || c!= ' ')
-	        tmp_lexeme += c;
 
         pos++;
         // we hit a non-backup accepting state
@@ -178,7 +181,7 @@ string LexicalAnalyzer::GetLexeme () const
 {
 	// This function will return the lexeme found by the most recent call to
 	// the get_token function
-	return "";
+    return lexeme;
 }
 
 void LexicalAnalyzer::ReportError (const string & msg)
