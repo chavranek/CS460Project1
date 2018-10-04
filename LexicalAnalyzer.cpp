@@ -55,7 +55,7 @@ token_type LexicalAnalyzer::GetToken ()
       listingFile << "   " << linenum << ": " << line << endl;
       if (errorMsg != "")
 	{
-	  listingFile << errorMsg << endl;
+	  this->ReportError(errorMsg);
 	}
       //cout << linenum << ": " << line << endl;
       pos = 0;
@@ -187,6 +187,7 @@ string LexicalAnalyzer::GetLexeme () const
 void LexicalAnalyzer::ReportError (const string & msg)
 {
 	// This function will be called to write an error message to a file
+  listingFile << msg << endl;
 }
 
 string LexicalAnalyzer::trimExtension(string s) {
