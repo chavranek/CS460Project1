@@ -129,6 +129,11 @@ token_type LexicalAnalyzer::GetToken ()
     // need to start reading the next line of input?
     if(pos == line.length()){
         pos = 0;
+	// if a line can't be grabbed then the end of the file has been reached
+	if(!getline(input,line))
+	  {
+	    return EOF_T;
+	  }
         getline(input,line);
 		line = trim(line);
         linenum++;
@@ -157,9 +162,10 @@ token_type LexicalAnalyzer::GetToken ()
 
 
 	// no more?
-	if (tmp_lexeme == ""){
+	// if statement causes us to stop even at blank lines in middle of file
+	/*if (tmp_lexeme == ""){
 		return EOF_T;
-	}
+		}*/
 
 	// done reading lexeme
     cout  << tmp_lexeme <<endl;
