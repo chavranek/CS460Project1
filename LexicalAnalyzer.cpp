@@ -23,7 +23,7 @@ int DFA[][21] = {
 {LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LTE_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T,LT_T}
 };
 
-static string token_names[] = {	"EOF_T" }; 
+//static string token_names[] = {	"EOF_T" }; 
 string errorMsg = "";
 
 inline std::string trim(std::string& str)
@@ -182,8 +182,7 @@ token_type LexicalAnalyzer::GetToken ()
     int state = 0;
     string tmp_lexeme;
 	while(pos < line.length()){
-        char c = line[pos];
-<<<<<<< HEAD
+	  char c = line[pos];
 	int col = getcol(c);
 	if (col == 21)
 	  {
@@ -217,12 +216,12 @@ token_type LexicalAnalyzer::GetToken ()
         pos++;
         // we hit a non-backup accepting state
         if (state >= 200){
-            token = (token_type)state;
-            break;
+	  token = (token_type)state;
+	  break;
         }
         // we hit a backup accepting state
         else if (state >=100){
-            token = (token_type)state;
+	  token = (token_type)state;
             pos--;
             break;
         }
@@ -236,20 +235,22 @@ token_type LexicalAnalyzer::GetToken ()
 		}*/
 
 	// done reading lexeme
-	cout  << tmp_lexeme <<  "    " << this->GetTokenName(token) << endl;
+	//cout  << tmp_lexeme <<  "    " << this->GetTokenName(token) << endl;
 	lexeme = tmp_lexeme;
 	
 
 	// This function will find the next lexeme int the input file and return
 	// the token_type value associated with that lexeme
 	return token;
+	//return DIV_T;
 }
 
 string LexicalAnalyzer::GetTokenName (token_type t) const
 {
 	// The GetTokenName function returns a string containing the name of the
 	// token passed to it. 
-    return token_names[t];
+  return token_names[t];
+  //return "";
 }
 
 string LexicalAnalyzer::GetLexeme () const
