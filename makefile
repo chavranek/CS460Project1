@@ -16,7 +16,7 @@ SyntacticalAnalyzer.o : SyntacticalAnalyzer.cpp SyntacticalAnalyzer.h LexicalAna
 
 .PHONY: clean
 clean:
-	@rm -f *.o P1.out *.gch
+	@rm -f *.o P1.out *.gch *.lst *.p1 *.dbg
 
 run: P1.out
 	./P1.out P1-0.ss

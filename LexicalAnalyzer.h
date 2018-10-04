@@ -61,6 +61,7 @@ class LexicalAnalyzer
     void initTokenToName();
     void initKeywordToName();
     void initPredicateToName();
+    string trimExtension(string s);
     int getcol(char c);
 };
 

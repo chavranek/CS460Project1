@@ -20,6 +20,11 @@ LexicalAnalyzer::LexicalAnalyzer (char * filename)
 {
 	// This function will initialize the lexical analyzer class
     input = ifstream(filename);
+    string filenameBase = trimExtension(filename);
+    listingFile = ofstream(filenameBase + ".lst");
+    listingFile << "Input file: " << filename << endl;
+    tokenFile = ofstream(filenameBase + ".p1");
+    debugFile = ofstream(filenameBase + ".dbg");
     getline(input,line);
 	line = trim(line);
     linenum = 1;
@@ -43,10 +48,10 @@ token_type LexicalAnalyzer::GetToken ()
     // need to start reading the next line of input?
     if(pos == line.length()){
       // write the entire line to the .lst file
-      cout << "   " << linenum << ": " << line << endl;
+      listingFile << "   " << linenum << ": " << line << endl;
       if (errorMsg != "")
 	{
-	  cout << errorMsg << endl;
+	  listingFile << errorMsg << endl;
 	}
       //cout << linenum << ": " << line << endl;
       pos = 0;
@@ -54,13 +59,13 @@ token_type LexicalAnalyzer::GetToken ()
       // if a line can't be grabbed then the end of the file has been reached
 	if(!getline(input,line))
 	  {
-        cout << errors;
+        listingFile << errors;
         if(errors > 1) {
-            cout << " errors";
+            listingFile << " errors";
         } else {
-            cout << " error";
+            listingFile << " error";
         }
-        cout << " found in input file\n";
+        listingFile << " found in input file\n";
 	    return EOF_T;
 	  }
        	line = trim(line);
@@ -183,6 +188,19 @@ void LexicalAnalyzer::ReportError (const string & msg)
 {
 	// This function will be called to write an error message to a file
 }
+
+string LexicalAnalyzer::trimExtension(string s) {
+    string tmp(s);
+    int extensionLoc = tmp.find(".");
+    tmp = tmp.erase(extensionLoc);
+    return tmp;
+}
+
+
+
+
+
+
 
 void LexicalAnalyzer::initTokenToName() {
     token_names[LISTOP_T] = "LISTOP_T";
