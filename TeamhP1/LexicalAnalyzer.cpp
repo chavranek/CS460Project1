@@ -85,67 +85,56 @@ token_type LexicalAnalyzer::GetToken ()
     int state = 0;
     string tmp_lexeme;
     token = NONE;
-    while(pos < line.length())
-      {
-	char c = line[pos];
-	int col = getcol(c);
-	// only add whitespace if state == 9 (dbl quote)
-	if (state ==10 || c!= ' ')
-	{
-	    if (col != 21)
-	      tmp_lexeme += c;
+	while(pos < line.length()){
+	    char c = line[pos];
+	    int col = getcol(c);
+	    // only add whitespace if state == 9 (dbl quote)
+        if (state ==10 || c!= ' ')
+	        tmp_lexeme += c;
+	    if (col == 21)
+	    {
+	        //Report Error
+	        if(errorMsg != "")
+	        {
+		        errorMsg += "\n";
+	        }
+	        errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
+	        pos++;
+	        errors++;
+	        token = ERROR_T;
+	    	tokenFile << left << setw(12) << this->GetTokenName(token)  << c << endl;
+            lexeme = tmp_lexeme;
+	        return token;
+	    }
+
+	    state =  DFA[state][getcol(c)];
+	    if (state == ERROR_T)
+	    {
+	        if(errorMsg != "")
+	        {
+                errorMsg += "\n";
+            }
+            errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
+	        //pos++;
+	        errors++;
+	        //token = ERROR_T;
+	        //return token;
+	    }
+
+        pos++;
+        // we hit a non-backup accepting state
+        if (state >= 200){
+	        token = (token_type)state;
+	        break;
+        }
+        // we hit a backup accepting state
+        else if (state >=100){
+	        token = (token_type)state;
+            pos--;
+            break;
+        }
 	}
-	
-	int prevState = state;
-	state =  DFA[state][col];
-	
-	if (state == ERROR_T)
-	  {
-	    if(errorMsg != "")
-	      {
-		errorMsg += "\n";
-	      }
-	    // handles a situation with a bad .
-	    if (prevState == 8 && !isdigit(c))
-	      {
-		if (c != ' ')
-		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
-		else
-		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
-	      }
-	    else
-	      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
-	    
-	    errors++;
-	    
-	    if (tmp_lexeme == "")
-	      {
-		tmp_lexeme += c;
-	      }
-	  }
-	
-	pos++;
-	// we have hit a . that doesn't have a number after it.
-	if (prevState == 8 && !isdigit(c) && c != ' ')
-	  {
-	    tmp_lexeme.pop_back();
-	    token = (token_type)state;
-	    pos--;
-	    break;
-	  }
-	// we hit a non-backup accepting state
-	else if (state >= 200){
-	  token = (token_type)state;
-	  break;
-	}
-	// we hit a backup accepting state
-	else if (state >=100 && state < 200){
-	  token = (token_type)state;
-	  pos--;
-	  break;
-	}
-      }
-    
+
 
     // this fixes if the lexeme is the only/last character on line
     if (token == NONE){
@@ -172,13 +161,6 @@ token_type LexicalAnalyzer::GetToken ()
             token = IDENT_T;
         }
     }
-
-    // handles the backup cases for the < and > when there isn't a space after
-    else if (token == LT_T || token == GT_T && tmp_lexeme.size() > 1)
-      {
-	tmp_lexeme.pop_back();
-      }
-    
 
     if(!tmp_lexeme.empty())
       tokenFile << left << setw(12) <<  this->GetTokenName(token) << tmp_lexeme << endl;
