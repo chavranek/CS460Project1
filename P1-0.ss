@@ -6,6 +6,8 @@ cons if cond display newline and or not define
 car cdr cadr cddr ?number
 number?  list?$zero?  null?  string?
 
+ThisIsAProblem$?
+
 + - / * modulo round
 = > < >= <=
 ( ) 'a
