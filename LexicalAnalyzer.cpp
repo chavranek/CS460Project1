@@ -92,12 +92,16 @@ token_type LexicalAnalyzer::GetToken ()
 	// only add whitespace if state == 9 (dbl quote)
 	if (state ==10 || c!= ' ')
 	{
-	    if (col != 21)
+	    //if (col != 21)
 	      tmp_lexeme += c;
 	}
 	
 	int prevState = state;
 	state =  DFA[state][col];
+    if(c == '$'){
+        //cout << "$TATE: " << state << endl;
+          cout << "STATE: " << this->GetTokenName((token_type)state) << "   " << tmp_lexeme <<  endl;
+    }
 	
 	if (state == ERROR_T)
 	  {
@@ -142,8 +146,10 @@ token_type LexicalAnalyzer::GetToken ()
 	// we hit a backup accepting state
 	else if (state >=100 && state < 200){
 	  token = (token_type)state;
-      if(c != ' ')
+      if(c != ' '){
+          //cout << "STATE: " << this->GetTokenName((token_type)state) << endl;
         tmp_lexeme.pop_back();
+      }
 	  pos--;
 	  break;
 	}
