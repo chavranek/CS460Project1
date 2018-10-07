@@ -85,9 +85,11 @@ token_type LexicalAnalyzer::GetToken ()
     int state = 0;
     string tmp_lexeme;
     token = NONE;
+    char lastChar;
     while(pos < line.length())
       {
 	char c = line[pos];
+	lastChar = c;
 	int col = getcol(c);
 	// only add whitespace if state == 9 (dbl quote)
 	if (state ==10 || c!= ' ')
@@ -139,7 +141,7 @@ token_type LexicalAnalyzer::GetToken ()
 	  break;
 	}
 	// we hit a backup accepting state
-	else if (state >=100 && state < 200){
+	else if (state >=100){
 	  token = (token_type)state;
 	  pos--;
 	  break;
@@ -159,7 +161,13 @@ token_type LexicalAnalyzer::GetToken ()
             token = keywords[tmp_lexeme];
         }
         else // we didnt find it
+	  {
+	    if (lastChar != ' ')
+	      {
+		tmp_lexeme.pop_back();
+	      }
             token = IDENT_T;
+	  }
     }
     // check if its actually a predicate or an IDEN_T + ?
     else if (token == PREDICATE){
