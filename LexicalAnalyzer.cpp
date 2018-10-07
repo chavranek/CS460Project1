@@ -142,6 +142,8 @@ token_type LexicalAnalyzer::GetToken ()
 	// we hit a backup accepting state
 	else if (state >=100 && state < 200){
 	  token = (token_type)state;
+      if(c != ' ')
+        tmp_lexeme.pop_back();
 	  pos--;
 	  break;
 	}
@@ -175,10 +177,13 @@ token_type LexicalAnalyzer::GetToken ()
     }
 
     // handles the backup cases for the < and > when there isn't a space after
+    /*
     else if (token == LT_T || token == GT_T && tmp_lexeme.size() > 1)
       {
+          cout << tmp_lexeme << endl;
 	tmp_lexeme.pop_back();
       }
+      */
     
     if(token == IDENT_T && tmp_lexeme.back() == '.')
         tmp_lexeme.pop_back();
