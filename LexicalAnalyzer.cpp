@@ -98,12 +98,8 @@ token_type LexicalAnalyzer::GetToken ()
 	
 	int prevState = state;
 	state =  DFA[state][col];
-    if(c == '$'){
-        //cout << "$TATE: " << state << endl;
-          cout << "STATE: " << this->GetTokenName((token_type)state) << "   " << tmp_lexeme <<  endl;
-    }
 	
-	if (state == ERROR_T)
+	if (state == ERROR_T || (tmp_lexeme == "." && pos == line.length() - 1))
 	  {
 	    if(errorMsg != "")
 	      {
