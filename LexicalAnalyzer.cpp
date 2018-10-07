@@ -128,7 +128,8 @@ token_type LexicalAnalyzer::GetToken ()
 	// we have hit a . that doesn't have a number after it.
 	if (prevState == 8 && !isdigit(c) && c != ' ')
 	  {
-	    tmp_lexeme.pop_back();
+        if(tmp_lexeme.length() > 1)
+	        tmp_lexeme.pop_back();
 	    token = (token_type)state;
 	    pos--;
 	    break;
@@ -179,6 +180,8 @@ token_type LexicalAnalyzer::GetToken ()
 	tmp_lexeme.pop_back();
       }
     
+    if(token == IDENT_T && tmp_lexeme.back() == '.')
+        tmp_lexeme.pop_back();
 
     if(!tmp_lexeme.empty())
       tokenFile << left << setw(12) <<  this->GetTokenName(token) << tmp_lexeme << endl;
