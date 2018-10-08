@@ -85,11 +85,9 @@ token_type LexicalAnalyzer::GetToken ()
     int state = 0;
     string tmp_lexeme;
     token = NONE;
-    char lastChar;
     while(pos < line.length())
       {
 	char c = line[pos];
-	lastChar = c;
 	int col = getcol(c);
 	// only add whitespace if state == 9 (dbl quote)
 	if (state ==10 || c!= ' ')
@@ -130,11 +128,35 @@ token_type LexicalAnalyzer::GetToken ()
 	// we have hit a . that doesn't have a number after it.
 	if (prevState == 8 && !isdigit(c) && c != ' ')
 	  {
-        if(tmp_lexeme.length() > 1)
-	        tmp_lexeme.pop_back();
+	    if(tmp_lexeme.length() > 1)
+	      tmp_lexeme.pop_back();
 	    token = (token_type)state;
 	    pos--;
 	    break;
+	  }
+	else if (tmp_lexeme == "+." && state == ERROR_T)
+	  {
+	    if(tmp_lexeme[0] == '+')
+	      {
+		state = PLUS_T;
+		tmp_lexeme.pop_back();
+		token = (token_type)state;
+		pos--;
+		pos--;
+		break;
+	      }
+	  }
+	else if (tmp_lexeme == "-." && state == ERROR_T)
+	  {
+	    if(tmp_lexeme[0] == '-')
+	      {
+		state = MIN_T;
+		tmp_lexeme.pop_back();
+		token = (token_type)state;
+		pos--;
+		pos--;
+		break;
+	      }
 	  }
 	// we hit a non-backup accepting state
 	else if (state >= 200){
@@ -144,10 +166,10 @@ token_type LexicalAnalyzer::GetToken ()
 	// we hit a backup accepting state
 	else if (state >=100){
 	  token = (token_type)state;
-      if(c != ' '){
-          //cout << "STATE: " << this->GetTokenName((token_type)state) << endl;
-        tmp_lexeme.pop_back();
-      }
+	  if(c != ' '){
+	    //cout << "STATE: " << this->GetTokenName((token_type)state) << endl;
+	    tmp_lexeme.pop_back();
+	  }
 	  pos--;
 	  break;
 	}
@@ -167,11 +189,7 @@ token_type LexicalAnalyzer::GetToken ()
         }
         else // we didnt find it
 	  {
-	    if (lastChar != ' ')
-	      {
-		tmp_lexeme.pop_back();
-	      }
-            token = IDENT_T;
+	    token = IDENT_T;
 	  }
     }
     // check if its actually a predicate or an IDEN_T + ?
