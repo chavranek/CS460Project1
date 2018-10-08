@@ -59,19 +59,19 @@ token_type LexicalAnalyzer::GetToken ()
 	{
 	  this->ReportError(errorMsg);
 	}
-      //cout << linenum << ": " << line << endl;
+      
       pos = 0;
       errorMsg = "";
       // if a line can't be grabbed then the end of the file has been reached
 	if(!getline(input,line))
 	  {
-        listingFile << errors;
-        if(errors > 1) {
-            listingFile << " errors";
-        } else {
-            listingFile << " error";
-        }
-        listingFile << " found in input file\n";
+	    listingFile << errors;
+	    if(errors > 1) {
+	      listingFile << " errors";
+	    } else {
+	      listingFile << " error";
+	    }
+	    listingFile << " found in input file\n";
         token = EOF_T;
         tokenFile << this->GetTokenName(token) << endl;
 	    return EOF_T;
@@ -79,7 +79,7 @@ token_type LexicalAnalyzer::GetToken ()
        	line = trim(line);
         linenum++;
     }
-    //cout << "pos: " << pos << endl;
+    
 
     // read a lexeme?
     int state = 0;
@@ -92,8 +92,7 @@ token_type LexicalAnalyzer::GetToken ()
 	// only add whitespace if state == 9 (dbl quote)
 	if (state ==10 || c!= ' ')
 	{
-	    //if (col != 21)
-	      tmp_lexeme += c;
+	  tmp_lexeme += c;
 	}
 	
 	int prevState = state;
@@ -170,7 +169,6 @@ token_type LexicalAnalyzer::GetToken ()
 	else if (state >=100){
 	  token = (token_type)state;
 	  if(c != ' '){
-	    //cout << "STATE: " << this->GetTokenName((token_type)state) << endl;
 	    tmp_lexeme.pop_back();
 	  }
 	  pos--;
@@ -207,15 +205,6 @@ token_type LexicalAnalyzer::GetToken ()
         }
     }
 
-    // handles the backup cases for the < and > when there isn't a space after
-    /*
-    else if (token == LT_T || token == GT_T && tmp_lexeme.size() > 1)
-      {
-          cout << tmp_lexeme << endl;
-	tmp_lexeme.pop_back();
-      }
-      */
-    
     if(token == IDENT_T && tmp_lexeme.back() == '.')
         tmp_lexeme.pop_back();
 
@@ -233,7 +222,6 @@ string LexicalAnalyzer::GetTokenName (token_type t)
 	// The GetTokenName function returns a string containing the name of the
 	// token passed to it.
   return token_names[t];
-  //return "";
 }
 
 string LexicalAnalyzer::GetLexeme () const
