@@ -101,26 +101,29 @@ token_type LexicalAnalyzer::GetToken ()
 	
 	if (state == ERROR_T || (tmp_lexeme == "." && pos == line.length() - 1))
 	  {
-	    if(errorMsg != "")
+	    if(tmp_lexeme != "+." && tmp_lexeme != "-.")
 	      {
-		errorMsg += "\n";
-	      }
-	    // handles a situation with a bad .
-	    if (prevState == 8 && !isdigit(c))
-	      {
-		if (c != ' ')
-		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
+		if(errorMsg != "")
+		  {
+		    errorMsg += "\n";
+		  }
+		// handles a situation with a bad .
+		if (prevState == 8 && !isdigit(c))
+		  {
+		    if (c != ' ')
+		      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
+		    else
+		      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
+		  }
 		else
-		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
-	      }
-	    else
-	      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
-	    
-	    errors++;
-	    
-	    if (tmp_lexeme == "")
-	      {
-		tmp_lexeme += c;
+		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
+		
+		errors++;
+		
+		if (tmp_lexeme == "")
+		  {
+		    tmp_lexeme += c;
+		  }
 	      }
 	  }
 	
