@@ -94,14 +94,14 @@ token_type LexicalAnalyzer::GetToken ()
 	// only add whitespace if state == 9 (dbl quote)
 	if (state ==10 || c!= ' ')
 	{
-	    if (col != 21)
+	    //if (col != 21)
 	      tmp_lexeme += c;
 	}
 	
 	int prevState = state;
 	state =  DFA[state][col];
 	
-	if (state == ERROR_T)
+	if (state == ERROR_T || (tmp_lexeme == "." && pos == line.length() - 1))
 	  {
 	    if(errorMsg != "")
 	      {
@@ -130,7 +130,8 @@ token_type LexicalAnalyzer::GetToken ()
 	// we have hit a . that doesn't have a number after it.
 	if (prevState == 8 && !isdigit(c) && c != ' ')
 	  {
-	    tmp_lexeme.pop_back();
+        if(tmp_lexeme.length() > 1)
+	        tmp_lexeme.pop_back();
 	    token = (token_type)state;
 	    pos--;
 	    break;
@@ -143,6 +144,10 @@ token_type LexicalAnalyzer::GetToken ()
 	// we hit a backup accepting state
 	else if (state >=100){
 	  token = (token_type)state;
+      if(c != ' '){
+          //cout << "STATE: " << this->GetTokenName((token_type)state) << endl;
+        tmp_lexeme.pop_back();
+      }
 	  pos--;
 	  break;
 	}
@@ -182,11 +187,16 @@ token_type LexicalAnalyzer::GetToken ()
     }
 
     // handles the backup cases for the < and > when there isn't a space after
+    /*
     else if (token == LT_T || token == GT_T && tmp_lexeme.size() > 1)
       {
+          cout << tmp_lexeme << endl;
 	tmp_lexeme.pop_back();
       }
+      */
     
+    if(token == IDENT_T && tmp_lexeme.back() == '.')
+        tmp_lexeme.pop_back();
 
     if(!tmp_lexeme.empty())
       tokenFile << left << setw(12) <<  this->GetTokenName(token) << tmp_lexeme << endl;

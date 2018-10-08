@@ -4,11 +4,18 @@ identifier ident_1 function
 "Hello World"
 
 .x
+x.
+$$$>.
+
+$hell.o
 cons if cond display newline and or not define
 car cdr cadr cddr ?number cadddddr
-number?  list?$zero?  null?  string? ssu?
+number?  list?$zero?  null?  string? ?ssu?
 
-+ - / * modulo round
 = > <. >= <=
 ( ) 'a
+
+
+.astring.%<.>
+.+. .-. ./. .*. modulo round
 
