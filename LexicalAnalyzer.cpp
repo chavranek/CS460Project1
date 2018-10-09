@@ -73,7 +73,7 @@ token_type LexicalAnalyzer::GetToken ()
 	    }
 	    listingFile << " found in input file\n";
         token = EOF_T;
-        tokenFile << this->GetTokenName(token) << endl;
+        tokenFile << "\t" << this->GetTokenName(token) << endl;
 	    return EOF_T;
 	  }
        	line = trim(line);
