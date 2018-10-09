@@ -100,39 +100,35 @@ token_type LexicalAnalyzer::GetToken ()
 	
 	if (state == ERROR_T || (tmp_lexeme == "." && pos == line.length() - 1))
 	  {
-	    //if(tmp_lexeme != "+." && tmp_lexeme != "-.")
-	    //{
-		if(errorMsg != "")
+	    if(errorMsg != "")
+	      {
+		errorMsg += "\n";
+	      }
+	    // handles a situation with a bad .
+	    if (prevState == 8 && !isdigit(c))
+	      {
+		if (c != ' ')
 		  {
-		    errorMsg += "\n";
-		  }
-		// handles a situation with a bad .
-		if (prevState == 8 && !isdigit(c))
-		  {
-		    if (c != ' ')
+		    if (tmp_lexeme[0] == '+' || tmp_lexeme[0] == '-')
 		      {
-			if (tmp_lexeme[0] == '+' || tmp_lexeme[0] == '-')
-			  {
-			    errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0] + tmp_lexeme[1];
-			  }
-			else
-			  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
+			errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0] + tmp_lexeme[1];
 		      }
 		    else
-		      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
-		    
+		      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
 		  }
 		else
-		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
+		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
 		
-		errors++;
-		
-		if (tmp_lexeme == "")
-		  {
-		    tmp_lexeme += c;
-		  }
-		//}
-		  
+	      }
+	    else
+	      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
+	    
+	    errors++;
+	    
+	    if (tmp_lexeme == "")
+	      {
+		tmp_lexeme += c;
+	      }
 	  }
 	
 	pos++;
@@ -145,30 +141,6 @@ token_type LexicalAnalyzer::GetToken ()
 	    pos--;
 	    break;
 	  }
-	/*else if (tmp_lexeme == "+." && state == ERROR_T)
-	  {
-	    if(tmp_lexeme[0] == '+')
-	      {
-		state = PLUS_T;
-		tmp_lexeme.pop_back();
-		token = (token_type)state;
-		pos--;
-		pos--;
-		break;
-	      }
-	  }
-	else if (tmp_lexeme == "-." && state == ERROR_T)
-	  {
-	    if(tmp_lexeme[0] == '-')
-	      {
-		state = MIN_T;
-		tmp_lexeme.pop_back();
-		token = (token_type)state;
-		pos--;
-		pos--;
-		break;
-	      }
-	  }*/
 	// we hit a non-backup accepting state
 	else if (state >= 200){
 	  token = (token_type)state;
@@ -214,22 +186,13 @@ token_type LexicalAnalyzer::GetToken ()
 	    tmp_lexeme.pop_back();
 	    if (keywords.find(tmp_lexeme) != keywords.end())
 	      {
-		//pos--;
-		//tmp_lexeme.pop_back();
 		token = keywords[tmp_lexeme];
 	      }
 	    else
 	      {
-		//pos--; // backup on the ?
-		//tmp_lexeme.pop_back();
 		token = IDENT_T;
 	      }
 	  }
-        /*else{
-            pos--; // backup on the ?
-            tmp_lexeme.pop_back();
-            token = IDENT_T;
-        }*/
     }
     else if(state == 10)
       {
