@@ -184,6 +184,7 @@ token_type LexicalAnalyzer::GetToken ()
 	  break;
 	}
       }
+
     
 
     // this fixes if the lexeme is the only/last character on line
@@ -230,6 +231,10 @@ token_type LexicalAnalyzer::GetToken ()
             token = IDENT_T;
         }*/
     }
+    else if(state == 10)
+      {
+	token = (token_type)ERROR_T;
+      }
 
     if(token == IDENT_T && tmp_lexeme.back() == '.')
         tmp_lexeme.pop_back();
