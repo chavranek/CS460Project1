@@ -100,8 +100,8 @@ token_type LexicalAnalyzer::GetToken ()
 	
 	if (state == ERROR_T || (tmp_lexeme == "." && pos == line.length() - 1))
 	  {
-	    if(tmp_lexeme != "+." && tmp_lexeme != "-.")
-	      {
+	    //if(tmp_lexeme != "+." && tmp_lexeme != "-.")
+	    //{
 		if(errorMsg != "")
 		  {
 		    errorMsg += "\n";
@@ -110,9 +110,17 @@ token_type LexicalAnalyzer::GetToken ()
 		if (prevState == 8 && !isdigit(c))
 		  {
 		    if (c != ' ')
-		      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
+		      {
+			if (tmp_lexeme[0] == '+' || tmp_lexeme[0] == '-')
+			  {
+			    errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0] + tmp_lexeme[1];
+			  }
+			else
+			  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0];
+		      }
 		    else
 		      errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
+		    
 		  }
 		else
 		  errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos + 1) + ": Invalid character found: " + c;
@@ -123,7 +131,8 @@ token_type LexicalAnalyzer::GetToken ()
 		  {
 		    tmp_lexeme += c;
 		  }
-	      }
+		//}
+		  
 	  }
 	
 	pos++;
@@ -136,7 +145,7 @@ token_type LexicalAnalyzer::GetToken ()
 	    pos--;
 	    break;
 	  }
-	else if (tmp_lexeme == "+." && state == ERROR_T)
+	/*else if (tmp_lexeme == "+." && state == ERROR_T)
 	  {
 	    if(tmp_lexeme[0] == '+')
 	      {
@@ -159,7 +168,7 @@ token_type LexicalAnalyzer::GetToken ()
 		pos--;
 		break;
 	      }
-	  }
+	  }*/
 	// we hit a non-backup accepting state
 	else if (state >= 200){
 	  token = (token_type)state;
@@ -198,11 +207,28 @@ token_type LexicalAnalyzer::GetToken ()
         if(predicates.find(tmp_lexeme) != predicates.end()){
             token = predicates[tmp_lexeme];
         }
-        else{
+	else
+	  {
+	    pos--;
+	    tmp_lexeme.pop_back();
+	    if (keywords.find(tmp_lexeme) != keywords.end())
+	      {
+		//pos--;
+		//tmp_lexeme.pop_back();
+		token = keywords[tmp_lexeme];
+	      }
+	    else
+	      {
+		//pos--; // backup on the ?
+		//tmp_lexeme.pop_back();
+		token = IDENT_T;
+	      }
+	  }
+        /*else{
             pos--; // backup on the ?
             tmp_lexeme.pop_back();
             token = IDENT_T;
-        }
+        }*/
     }
 
     if(token == IDENT_T && tmp_lexeme.back() == '.')
@@ -255,7 +281,7 @@ void LexicalAnalyzer::initTokenToName() {
     token_names[KEYWORD_T] = "KEYWORD_T";
     token_names[IDENT_T] = "IDENT_T";
     token_names[PLUS_T] = "PLUS_T";
-    token_names[MIN_T] = "MIN_T";
+    token_names[MINUS_T] = "MINUS_T";
     token_names[NUMLIT_T] = "NUMLIT_T";
     token_names[GT_T] = "GT_T";
     token_names[LT_T] = "LT_T";
