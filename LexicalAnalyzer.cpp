@@ -109,6 +109,7 @@ token_type LexicalAnalyzer::GetToken ()
 	      {
 		if (c != ' ')
 		  {
+		    // checks if the error is coming from a +. or -.
 		    if (tmp_lexeme[0] == '+' || tmp_lexeme[0] == '-')
 		      {
 			errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme[0] + tmp_lexeme[1];
@@ -182,6 +183,7 @@ token_type LexicalAnalyzer::GetToken ()
         }
 	else
 	  {
+	    // if it's not a predicate the string before the ? could be a keyword
 	    pos--;
 	    tmp_lexeme.pop_back();
 	    if (keywords.find(tmp_lexeme) != keywords.end())
@@ -194,6 +196,8 @@ token_type LexicalAnalyzer::GetToken ()
 	      }
 	  }
     }
+
+    // we have a string literal without a closing quote before the end of the line
     else if(state == 10)
       {
 	errors++;
