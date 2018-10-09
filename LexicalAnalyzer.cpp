@@ -233,6 +233,7 @@ token_type LexicalAnalyzer::GetToken ()
     }
     else if(state == 10)
       {
+	errors++;
 	errorMsg += "Error at " + to_string(linenum) + "," + to_string(pos) + ": Invalid character found: " + tmp_lexeme;
 	token = (token_type)ERROR_T;
       }
