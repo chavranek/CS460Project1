@@ -235,7 +235,7 @@ token_type LexicalAnalyzer::GetToken ()
         tmp_lexeme.pop_back();
 
     if(!tmp_lexeme.empty())
-      tokenFile << left << setw(12) <<  this->GetTokenName(token) << tmp_lexeme << endl;
+      tokenFile << "\t" << left << setw(16) <<  this->GetTokenName(token) << tmp_lexeme << endl;
 
 	lexeme = tmp_lexeme;
 
