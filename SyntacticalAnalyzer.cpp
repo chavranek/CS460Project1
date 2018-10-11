@@ -13,11 +13,15 @@ SyntacticalAnalyzer::SyntacticalAnalyzer (char * filename)
 	while ((t = lex->GetToken()) != EOF_T)
 	{
 
+        cout << '\t' << setw(12) << left << lex->GetLexeme();
+        cout << setw(12) << left << lex->GetTokenName(t) << endl;
+
         int i;
 
 		// write its name to the .p1 file
 		// write the corresponding lexeme to the .p1 file
 	}
+    cout << setw(12) << left << lex->GetTokenName(t) << endl;
 }
 
 SyntacticalAnalyzer::~SyntacticalAnalyzer ()

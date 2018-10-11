@@ -161,7 +161,7 @@ token_type LexicalAnalyzer::GetToken ()
     
 
     // this fixes if the lexeme is the only/last character on line
-    if (token == NONE){
+    if (token == NONE && !tmp_lexeme.empty()){
         token = (token_type)DFA[state][14];
     }
 
@@ -208,10 +208,13 @@ token_type LexicalAnalyzer::GetToken ()
     if(token == IDENT_T && tmp_lexeme.back() == '.')
         tmp_lexeme.pop_back();
 
-    if(!tmp_lexeme.empty())
-      tokenFile << "\t" << left << setw(16) <<  this->GetTokenName(token) << tmp_lexeme << endl;
+    if(!tmp_lexeme.empty()){
+        tokenFile << "\t" << left << setw(16) <<  this->GetTokenName(token) << tmp_lexeme << endl;
+    }
+
 
 	lexeme = tmp_lexeme;
+
 
 
 	return token;
